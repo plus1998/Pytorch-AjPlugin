@@ -152,7 +152,7 @@ public class PluginPytorch extends Plugin {
         return TensorImageUtils.bitmapToFloat32Tensor(b,mean,std);
     }
 
-    public static ArrayList<OdResult> floatsToResults(float[] outputs, int mOutputRow, int mOutputColumn, float imgScaleX, float imgScaleY, float mThreshold) {
+    public ArrayList<OdResult> floatsToResults(float[] outputs, int mOutputRow, int mOutputColumn, float imgScaleX, float imgScaleY, float mThreshold) {
         ArrayList<OdResult> odResults = new ArrayList<>();
         for (int i = 0; i< mOutputRow; i++) {
             if (outputs[i* mOutputColumn +4] > mThreshold) {
