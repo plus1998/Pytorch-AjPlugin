@@ -63,9 +63,13 @@ module.exports = function(plugin){
         std = std || [0.229, 0.224, 0.225];
         return plugin.bitmapToTensor(b,mean,std);
     }
-    pytorch.floatsToResults = function(floats,row,column,imgScaleX,imgScaleY,threshold){
+    pytorch.floatsToResultsV5 = function(floats,row,column,imgScaleX,imgScaleY,threshold){
         threshold = threshold || 0.3
-        return plugin.floatsToResults(floats,row,column,imgScaleX,imgScaleY,threshold)
+        return plugin.floatsToResultsV5(floats,row,column,imgScaleX,imgScaleY,threshold)
+    }
+    pytorch.floatsToResultsV8 = function(floats,row,column,imgScaleX,imgScaleY,threshold){
+        threshold = threshold || 0.3
+        return plugin.floatsToResultsV8(floats,row,column,imgScaleX,imgScaleY,threshold)
     }
 
     pytorch.simplifySentence = function(str){

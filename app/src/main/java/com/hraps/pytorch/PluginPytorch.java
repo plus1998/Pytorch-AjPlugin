@@ -152,7 +152,7 @@ public class PluginPytorch extends Plugin {
         return TensorImageUtils.bitmapToFloat32Tensor(b,mean,std);
     }
 
-    public ArrayList<OdResult> floatsToResults(float[] outputs, int mOutputRow, int mOutputColumn, float imgScaleX, float imgScaleY, float mThreshold) {
+    public ArrayList<OdResult> floatsToResultsV5(float[] outputs, int mOutputRow, int mOutputColumn, float imgScaleX, float imgScaleY, float mThreshold) {
         ArrayList<OdResult> odResults = new ArrayList<>();
         for (int i = 0; i< mOutputRow; i++) {
             if (outputs[i* mOutputColumn +4] > mThreshold) {
@@ -178,6 +178,37 @@ public class PluginPytorch extends Plugin {
                 Rect rect = new Rect((int)left,(int)top,(int)right,(int)bottom);
                 OdResult odResult = new OdResult(cls, outputs[i*mOutputColumn+4], rect);
                 odResults.add(odResult);
+            }
+        }
+        return odResults;
+    }
+
+    public ArrayList<OdResult> floatsToResultsV8(float[] outputs, int mOutputRow, int mOutputColumn, float imgScaleX, float imgScaleY, float mThreshold) {
+        ArrayList<OdResult> odResults = new ArrayList<>();
+        for (int i = 0; i < mOutputRow; i++) {
+            float x = outputs[i];
+            float y = outputs[mOutputRow + i];
+            float w = outputs[2 * mOutputRow + i];
+            float h = outputs[3 * mOutputRow + i];
+
+            float left = imgScaleX * (x - w / 2);
+            float top = imgScaleY * (y - h / 2);
+            float right = imgScaleX * (x + w / 2);
+            float bottom = imgScaleY * (y + h / 2);
+
+            float max = outputs[4 * mOutputRow + i];
+            int cls = 0;
+            for (int j = 4; j < mOutputColumn; j++) {
+                if (outputs[j * mOutputRow + i] > max) {
+                    max = outputs[j * mOutputRow + i];
+                    cls = j - 4;
+                }
+            }
+
+            if (max > mThreshold) {
+                Rect rect = new Rect((int) (left), (int) (top), (int) (right), (int) (bottom));
+                OdResult result = new OdResult(cls, max, rect);
+                odResults.add(result);
             }
         }
         return odResults;
