@@ -72,7 +72,7 @@ public class PluginPytorch extends Plugin {
         }else if(path.equals("textcnn")){
             return PyTorchAndroid.loadModuleFromAsset(getSelfContext().getAssets(), "textcnn.torchscript.pt",d);
         }else {
-            return Module.load(path,d);
+            return Module.load(path,null,d);
         }
     }
 
